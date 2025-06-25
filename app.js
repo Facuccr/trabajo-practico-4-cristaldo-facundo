@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import sequelize from "./src/config/database.js";
+import { sequelize } from "./src/config/database.js";
 
 dotenv.config();
 
@@ -8,6 +8,12 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
+
+app.use("/api/characters", charactersRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Ruta no encontrada" });
+});
 
 sequelize
   .sync()
