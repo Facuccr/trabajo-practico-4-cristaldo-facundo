@@ -1,16 +1,22 @@
-import express from 'express';
+import express from "express";
 import dotenv from "dotenv";
+import sequelize from "./src/config/database.js";
 
 dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT;
 
-const app = express()
-const PORT= process.env.PORT;
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
-
-app.listen(3000, ()=>{
-    console.log("servidor corriendo")
-})
+sequelize
+  .sync()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en el puerto ${PORT}`);
+      console.log("Base de datos sincronizada");
+    });
+  })
+  .catch((err) => {
+    console.error("Error al conectar con la BD", err);
+  });
