@@ -16,7 +16,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Ruta no encontrada" });
 });
 // Manejo de errores global
-app.use((err, req, res, next) => {
+app.use((err, req, res,) => {
   console.error(err.stack);
   res
     .status(500)

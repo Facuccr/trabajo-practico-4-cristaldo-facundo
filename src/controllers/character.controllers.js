@@ -15,8 +15,7 @@ export const getAllCharacters = async (req, res) => {
 //obtener personaje por id
 export const getCharacterById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const character = await Character.findByPk(id);
+    const character = await Character.findByPk(req.params.id);
     if (!character) {
       return res.status(404).json({ message: "Personaje no encontrado" });
     }
@@ -135,20 +134,11 @@ export const updateCharacter = async (req, res) => {
 //borrar personaje
 export const deleteCharacter = async (req, res) => {
   try {
-    const { id } = req.params;
-    const character = await Character.findByPk(id); //buscamos id
-
-    if (!character) {
-      res
-        .status(404)
-        .json({ message: "No se encontro personaje para eliminar" });
-    }
-
-    await character.destroy();
-    res.status(204).send(); //eliminamos y enviamos, indicando q todo salio bien pero no hay nada q mostrar
+     const deleted = await Character.destroy({where: {id: req.params.id}});
+     if (deleted===0) return res.status(404).json({message:"Personaje no encontrado"})
+    if (deleted)return res.status(204).json({message:"personaje eliminado correctamente"});
+     else res.status(404).json({message:"Personaje no ecnontrado"})
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "error al eliminar el pj", error: error.message });
+    res.status(500).json({error: error.message})
   }
-};
+}
